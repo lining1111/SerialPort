@@ -1,0 +1,4 @@
+/home/lining/CLionProjects/SerialPort/cmake-build-release/CMakeFiles/rebuild_cache.dir
+/home/lining/CLionProjects/SerialPort/cmake-build-release/CMakeFiles/edit_cache.dir
+/home/lining/CLionProjects/SerialPort/cmake-build-release/CMakeFiles/qt_test.dir
+/home/lining/CLionProjects/SerialPort/cmake-build-release/CMakeFiles/qt_test_autogen.dir

@@ -113,7 +113,7 @@ void MainWindow::showInRecvText(QString str)
             result = "";
             for(int i = 0; i < str.length(); ++i)
             {
-                result += QString::number(str[i].toAscii());
+                result += QString::number(str[i].toLatin1());
             }
             ui->recvTextEdit->insertPlainText(result.toUtf8());
         }
@@ -280,7 +280,7 @@ void MainWindow::on_sendPushButton1_clicked()
             sendStr = ui->sendTextEdit1->toPlainText();
             for(int i = 0; i < sendStr.length(); ++i)
             {
-                QString tmpStr = QString::number(sendStr[i].toAscii(), 16);
+                QString tmpStr = QString::number(sendStr[i].toLatin1(), 16);
                 result += tmpStr;
             }
             sendNum += sendStr.length();
