@@ -25,6 +25,8 @@ private:
 //    void *ui;
     SerialPort *port;
     QMutex mutex;
+public:
+    bool canRecv = true;
 
 protected:
     void run();

@@ -28,7 +28,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     QObject::connect(timer, SIGNAL(timeout()), this, SLOT(timeOutEvent()));
     QObject::connect(systemTimer, SIGNAL(timeout()), this, SLOT(systemTimeUpdate()));
-    QObject::connect(thread, SIGNAL(sendDateToRecvText(uint8_t * , int), this, SLOT(showInRecvText(uint8_t * , int)));
+    QObject::connect(thread, SIGNAL(sendDateToRecvText(uint8_t * , int)), this, SLOT(showInRecvText(uint8_t * , int)));
     QObject::connect(ui->recvTextEdit, SIGNAL(textChanged()), this, SLOT(autoScroll()));
     QObject::connect(ui->rateComboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(reLoadSerialPort()));
     QObject::connect(ui->checkBitComboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(reLoadSerialPort()));
@@ -93,20 +93,44 @@ void MainWindow::autoScroll() {
     ui->recvTextEdit->setTextCursor(cursor);
 }
 
+/**
+ * 16进制数组转换成字符串
+ * @param buf in 16进制数组
+ * @param len 数组长度
+ * @return 字符串
+ */
+static string HexArray2Str(uint8_t *buf, int len) {
+    string ret;
+    for (int i = 0; i < len; i++) {
+        char tmp[4];
+        bzero(tmp, sizeof(tmp));
+        sprintf(tmp, "%02x", buf[i]);
+        ret += tmp;
+        if (i < (len - 1)) {
+            //加空格
+            ret += " ";
+        }
+    }
+    return ret;
+}
+
+
 // 显示收到的数据的槽
 void MainWindow::showInRecvText(uint8_t *recv_buf, int recv_len) {
-    recvNum += recv_len;
     string result;
     if (ui->hexShowCheckBox->isChecked()) {
         //按照16进制解析字符串，并显示
-
-
-
-
+        result = HexArray2Str(recv_buf, recv_len);
     } else {
         //原文
+        result = (char *) recv_buf;
     }
+    recvNum += recv_len;
+    ui->recvTextEdit->insertPlainText("recv:");
     ui->recvTextEdit->insertPlainText(QString::fromStdString(result));
+    ui->recvTextEdit->insertPlainText("\n");
+
+    thread->canRecv = true;
 
 }
 
@@ -221,6 +245,79 @@ void MainWindow::on_clearRecvPushButton_clicked() {
     ui->recvTextEdit->clear();
 }
 
+static bool IsHexNum(string value) {
+    bool ret = false;
+    for (int i = 0; i < value.size(); i++) {
+        char c = value.at(i);
+        if ((c >= '0' && c <= '9') || (c >= 'a' && c <= 'f') || (c >= 'A' && c <= 'F')) {
+            ret = true;
+        } else {
+            ret = false;
+            break;
+        }
+    }
+    return ret;
+}
+
+static bool IsDecNum(string value) {
+    bool ret = false;
+    for (int i = 0; i < value.size(); i++) {
+        char c = value.at(i);
+        if ((c >= '0' && c <= '9')) {
+            ret = true;
+        } else {
+            ret = false;
+            break;
+        }
+    }
+    return ret;
+}
+
+static uint8_t Str2Hex(string value) {
+    uint8_t ret = 0;
+    if (value.size() != 2) {
+        return ret;
+    }
+    char *str;
+    ret = strtol(value.c_str(), &str, 16);
+
+    return ret;
+}
+
+/**
+ * 将16进制字符串转换为16进制数组
+ * @param buf out 16进制数组
+ * @param len out 数组长度
+ * @param str in 16进制字符串
+ * @return 0：转换成功 -1：转换失败
+ */
+static int HexStr2HexArray(uint8_t *buf, int *len, string str) {
+    //1.先将原始文本按照空格进行分割
+    vector<string> res;
+    string tmp;
+    stringstream input(str);
+    while (input >> tmp) {
+        res.push_back(tmp);
+    }
+
+    //检查分割后的字符是否全部是16进制的数字的字符
+    for (int i = 0; i < res.size(); i++) {
+        if (!IsHexNum(res.at(i))) {
+
+            return -1;
+        }
+    }
+    //将16进制字符串转化为数值
+    int index = 0;
+    for (int i = 0; i < res.size(); i++) {
+        buf[i] = Str2Hex(res.at(i));
+        index++;
+    }
+    *len = index;
+    return 0;
+}
+
+
 // 发送１，不清空发送区
 void MainWindow::on_sendPushButton1_clicked() {
     if (openFlag) {
@@ -232,28 +329,10 @@ void MainWindow::on_sendPushButton1_clicked() {
         bzero(send_buf, sizeof(send_buf));
         if (ui->hexSendcheckBox->isChecked()) {
             //需要把发送的文本按照16进制进行发送
-            //1.先将原始文本按照空格进行分割
-            vector<string> res;
-            string tmp;
-            stringstream input(sendStr);
-            while (input >> tmp) {
-                res.push_back(tmp);
-            }
-
-            //检查分割后的字符是否全部是16进制的数字的字符
-            for (int i = 0; i < res.size(); i++) {
-                stringstream sin(res.at(i));
-                int value;
-                if (!(sin >> value)) {
-                    QMessageBox::information(this, QString::fromUtf8("错误"),
-                                             QString::fromUtf8("有非法字符"));
-                    return;
-                }
-            }
-
-            for (int i = 0; i < res.size(); i++) {
-                send_buf[i] = atoi(res.at(i).c_str());
-                send_len++;
+            if (HexStr2HexArray(send_buf, &send_len, sendStr) != 0) {
+                QMessageBox::information(this, QString::fromUtf8("错误"),
+                                         QString::fromUtf8("有非法字符"));
+                return;
             }
 
         } else {
