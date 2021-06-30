@@ -33,7 +33,7 @@ public:
     ~MainWindow();
 
 private slots:
-    void showInRecvText(QString str);
+    void showInRecvText(uint8_t *recv_buf, int recv_len);
     void SerialPortInitSlots();
     void autoScroll();
     void reLoadSerialPort();

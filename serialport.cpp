@@ -45,7 +45,7 @@ void SerialPort::initSet(std::string serialPortName, int speed, int databits, in
 }
 
 //　如果运行该函数的线程结束时，readFlag　为true，则表示有错误发生
-int SerialPort::readSerialPort(int times, char *read_buf, int len)
+int SerialPort::readSerialPort(int times, uint8_t *read_buf, int len)
 {
     int ret = 0;
     int readLen = 0;
@@ -63,9 +63,9 @@ int SerialPort::readSerialPort(int times, char *read_buf, int len)
     }
 }
 
-int SerialPort::writeSerialPort(std::string str)
+int SerialPort::writeSerialPort(uint8_t *write_buf, int len)
 {
-    return write(fds->fd, str.c_str(), str.length());
+    return write(fds->fd, write_buf, len);
 }
 
 int SerialPort::openSerialPort()

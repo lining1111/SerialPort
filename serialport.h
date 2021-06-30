@@ -32,8 +32,8 @@ public:
     int SetParity();
     void closeSerialPort();
     void initSet(std::string serialPortName, int speed, int databits, int stopbits, char parity);
-    int readSerialPort(int times, char *read_buf, int len);               // 需要时间间隔, 回调函数（显示读到的数据）
-    int writeSerialPort(std::string str);
+    int readSerialPort(int times, uint8_t *read_buf, int len);               // 需要时间间隔, 回调函数（显示读到的数据）
+    int writeSerialPort(uint8_t *write_buf, int len);
     ~SerialPort();
 
 private:

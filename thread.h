@@ -7,14 +7,16 @@
 #include <QDebug>
 #include "serialport.h"
 
-class Thread:public QThread
-{
-    Q_OBJECT
+class Thread : public QThread {
+Q_OBJECT
 public:
     Thread();
+
     ~Thread();
+
     void stop();
-    void setPort(void *p){ port = (SerialPort *)p; }
+
+    void setPort(void *p) { port = (SerialPort *) p; }
 //    void setCallBack(void (*p)(void *, void *), void *tmpUi, void *port){ QMutexLocker locker(&mutex); cb = p; ui = tmpUi; this->port = port; }
 
 private:
@@ -28,7 +30,8 @@ protected:
     void run();
 
 signals:
-    void sendDateToRecvText(QString str);
+
+    void sendDateToRecvText(uint8_t *recv_buf, int recv_len);
 };
 
 #endif // THREAD
