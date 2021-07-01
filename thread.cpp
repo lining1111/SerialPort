@@ -56,6 +56,7 @@ void Thread::run() {
                     qDebug(print_data.c_str());
                 }
 
+                //伪代码，可以根据命令得到具体的数据如卡号，再进行具体的操作
             }
         }
     }

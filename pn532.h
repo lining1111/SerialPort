@@ -59,43 +59,6 @@ namespace pn532 {
 #define PN532_HOSTTOPN532                   (0xD4)
 #define PN532_PN532TOHOST                   (0xD5)
 
-// PN532 Commands
-#define PN532_COMMAND_DIAGNOSE              (0x00)
-#define PN532_COMMAND_GETFIRMWAREVERSION    (0x02)
-#define PN532_COMMAND_GETGENERALSTATUS      (0x04)
-#define PN532_COMMAND_READREGISTER          (0x06)
-#define PN532_COMMAND_WRITEREGISTER         (0x08)
-#define PN532_COMMAND_READGPIO              (0x0C)
-#define PN532_COMMAND_WRITEGPIO             (0x0E)
-#define PN532_COMMAND_SETSERIALBAUDRATE     (0x10)
-#define PN532_COMMAND_SETPARAMETERS         (0x12)
-#define PN532_COMMAND_SAMCONFIGURATION      (0x14)
-#define PN532_COMMAND_POWERDOWN             (0x16)
-#define PN532_COMMAND_RFCONFIGURATION       (0x32)
-#define PN532_COMMAND_RFREGULATIONTEST      (0x58)
-#define PN532_COMMAND_INJUMPFORDEP          (0x56)
-#define PN532_COMMAND_INJUMPFORPSL          (0x46)
-#define PN532_COMMAND_INLISTPASSIVETARGET   (0x4A)
-#define PN532_COMMAND_INATR                 (0x50)
-#define PN532_COMMAND_INPSL                 (0x4E)
-#define PN532_COMMAND_INDATAEXCHANGE        (0x40)
-#define PN532_COMMAND_INCOMMUNICATETHRU     (0x42)
-#define PN532_COMMAND_INDESELECT            (0x44)
-#define PN532_COMMAND_INRELEASE             (0x52)
-#define PN532_COMMAND_INSELECT              (0x54)
-#define PN532_COMMAND_INAUTOPOLL            (0x60)
-#define PN532_COMMAND_TGINITASTARGET        (0x8C)
-#define PN532_COMMAND_TGSETGENERALBYTES     (0x92)
-#define PN532_COMMAND_TGGETDATA             (0x86)
-#define PN532_COMMAND_TGSETDATA             (0x8E)
-#define PN532_COMMAND_TGSETMETADATA         (0x94)
-#define PN532_COMMAND_TGGETINITIATORCOMMAND (0x88)
-#define PN532_COMMAND_TGRESPONSETOINITIATOR (0x90)
-#define PN532_COMMAND_TGGETTARGETSTATUS     (0x8A)
-
-#define PN532_RESPONSE_INDATAEXCHANGE       (0x41)
-#define PN532_RESPONSE_INLISTPASSIVETARGET  (0x4B)
-
 #define PN532_WAKEUP                        (0x55)
 
 #define PN532_SPI_STATREAD                  (0x02)
@@ -110,17 +73,6 @@ namespace pn532 {
 #define PN532_I2C_READYTIMEOUT              (20)
 
 #define PN532_MIFARE_ISO14443A              (0x00)
-
-// Mifare Commands
-#define MIFARE_CMD_AUTH_A                   (0x60)
-#define MIFARE_CMD_AUTH_B                   (0x61)
-#define MIFARE_CMD_READ                     (0x30)
-#define MIFARE_CMD_WRITE                    (0xA0)
-#define MIFARE_CMD_TRANSFER                 (0xB0)
-#define MIFARE_CMD_DECREMENT                (0xC0)
-#define MIFARE_CMD_INCREMENT                (0xC1)
-#define MIFARE_CMD_STORE                    (0xC2)
-#define MIFARE_ULTRALIGHT_CMD_WRITE         (0xA2)
 
 #define MIFARE_UID_MAX_LENGTH               MIFARE_UID_TRIPLE_LENGTH
 #define MIFARE_UID_SINGLE_LENGTH            (4)
@@ -176,13 +128,65 @@ namespace pn532 {
 #define PN532_STATUS_ERROR                                              (-1)
 #define PN532_STATUS_OK                                                 (0)
 
-///<the baud rate and the modulation type to be used during the initialization
+    ///<the baud rate and the modulation type to be used during the initialization
     enum Card_Baud {
         TypeA_106kbps = 0x00,
         FeliCa_212kbps = 0x01,
         FeliCa_424kbps = 0x02,
         TypeB_106kbps = 0x03,
         Jewel_106kbps = 0x04,
+    };
+    ///< PN532 Commands
+    enum PN532_CMD {
+        PN532_COMMAND_DIAGNOSE = 0x00,
+        PN532_COMMAND_GETFIRMWAREVERSION = 0x02,
+        PN532_COMMAND_GETGENERALSTATUS = 0x04,
+        PN532_COMMAND_READREGISTER = 0x06,
+        PN532_COMMAND_WRITEREGISTER = 0x08,
+        PN532_COMMAND_READGPIO = 0x0C,
+        PN532_COMMAND_WRITEGPIO = 0x0E,
+        PN532_COMMAND_SETSERIALBAUDRATE = 0x10,
+        PN532_COMMAND_SETPARAMETERS = 0x12,
+        PN532_COMMAND_SAMCONFIGURATION = 0x14,
+        PN532_COMMAND_POWERDOWN = 0x16,
+        PN532_COMMAND_RFCONFIGURATION = 0x32,
+        PN532_COMMAND_RFREGULATIONTEST = 0x58,
+        PN532_COMMAND_INJUMPFORDEP = 0x56,
+        PN532_COMMAND_INJUMPFORPSL = 0x46,
+        PN532_COMMAND_INLISTPASSIVETARGET = 0x4A,
+        PN532_COMMAND_INATR = 0x50,
+        PN532_COMMAND_INPSL = 0x4E,
+        PN532_COMMAND_INDATAEXCHANGE = 0x40,
+        PN532_COMMAND_INCOMMUNICATETHRU = 0x42,
+        PN532_COMMAND_INDESELECT = 0x44,
+        PN532_COMMAND_INRELEASE = 0x52,
+        PN532_COMMAND_INSELECT = 0x54,
+        PN532_COMMAND_INAUTOPOLL = 0x60,
+        PN532_COMMAND_TGINITASTARGET = 0x8C,
+        PN532_COMMAND_TGSETGENERALBYTES = 0x92,
+        PN532_COMMAND_TGGETDATA = 0x86,
+        PN532_COMMAND_TGSETDATA = 0x8E,
+        PN532_COMMAND_TGSETMETADATA = 0x94,
+        PN532_COMMAND_TGGETINITIATORCOMMAND = 0x88,
+        PN532_COMMAND_TGRESPONSETOINITIATOR = 0x90,
+        PN532_COMMAND_TGGETTARGETSTATUS = 0x8A,
+    };
+
+    enum PN532_RESPONSE {
+        PN532_RESPONSE_INDATAEXCHANGE = 0x41,
+        PN532_RESPONSE_INLISTPASSIVETARGET = 0x4B,
+    };
+    ///< Mifare Commands
+    enum MIFARE_CMD {
+        MIFARE_CMD_AUTH_A = 0x60,///< Authentication A
+        MIFARE_CMD_AUTH_B = 0x61,///< Authentication B
+        MIFARE_CMD_READ = 0x30,///< 16 bytes reading
+        MIFARE_CMD_WRITE = 0xA0,///< 16 bytes writing
+        MIFARE_CMD_TRANSFER = 0xB0,///< Transfer
+        MIFARE_CMD_DECREMENT = 0xC0,///< Decrementation
+        MIFARE_CMD_INCREMENT = 0xC1,///< Incrementation
+        MIFARE_CMD_STORE = 0xC2,///< Restore
+        MIFARE_ULTRALIGHT_CMD_WRITE = 0xA2,///< 4 bytes writing
     };
 
     enum PN532_ERROR_CODE {
