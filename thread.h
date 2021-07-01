@@ -10,6 +10,10 @@
 class Thread : public QThread {
 Q_OBJECT
 public:
+    enum CardReaderType {
+        PN532,
+    };
+public:
     Thread();
 
     ~Thread();
@@ -27,6 +31,9 @@ private:
     QMutex mutex;
 public:
     bool canRecv = true;
+
+    ///< 具体解析使用
+    CardReaderType cardReaderType = PN532;
 
 protected:
     void run();

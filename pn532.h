@@ -172,113 +172,6 @@ namespace pn532 {
 
 #define PN532_GPIO_VALIDATIONBIT            (0x80)
 
-/* Official PN532 Errors Definitions */
-#define PN532_ERROR_NONE                                                (0x00)
-///< Time Out, the target has not answered
-#define PN532_ERROR_TIMEOUT                                             (0x01)
-///< A CRC error has been detected by the CIU
-#define PN532_ERROR_CRC                                                 (0x02)
-///< A Parity error has been detected by the CIU
-#define PN532_ERROR_PARITY                                              (0x03)
-
-/**
- * During an anti-collision/select operation (ISO/IEC14443-3 Type A and
- * ISO/IEC18092 106 kbps passive mode), an erroneous Bit Count has been
- * detected
- */
-#define PN532_ERROR_COLLISION_BITCOUNT                                  (0x04)
-///< Framing error during MIFARE operation
-#define PN532_ERROR_MIFARE_FRAMING                                      (0x05)
-
-/**
- * An abnormal bit-collision has been detected during bit wise
- * anti-collision at 106 kbps
- */
-#define PN532_ERROR_COLLISION_BITCOLLISION                              (0x06)
-///< Communication buffer size insufficien
-#define PN532_ERROR_NOBUFS                                              (0x07)
-///< RF Buffer overflow has been detected by the CI
-#define PN532_ERROR_RFNOBUFS                                            (0x09)
-
-/**
- * In active communication mode, the RF field has not been switched on
- * in time by the counterpart (as defined in NFCIP-1 standard
- */
-#define PN532_ERROR_ACTIVE_TOOSLOW                                      (0x0a)
-///< RF Protocol error
-#define PN532_ERROR_RFPROTO                                             (0x0b)
-
-/**
- * Temperature error: the internal temperature sensor has detected
- * overheating, and therefore has automatically switched off the
- * antenna drivers
- */
-#define PN532_ERROR_TOOHOT                                              (0x0d)
-///< Internal buffer overflow
-#define PN532_ERROR_INTERNAL_NOBUFS                                     (0x0e)
-///< Invalid parameter (range, format...)
-#define PN532_ERROR_INVAL                                               (0x10)
-
-/**
- * DEP Protocol: The PN533 configured in target mode does not support
- * the command received from the initiator (the command received is not
- * one of the following: ATR_REQ, WUP_REQ, PSL_REQ, DEP_REQ, DSL_REQ,
- * RLS_REQ)
- */
-#define PN532_ERROR_DEP_INVALID_COMMAND                                 (0x12)
-
-/**
- * DEP Protocol, MIFARE or ISO/IEC14443-4: The data format does not
- * match to the specification.  Depending on the RF protocol used, it
- * can be: Bad length of RF received frame, Incorrect value of PCB or
- * PFB, Invalid or unexpected RF received frame, NAD or DID incoherence.
- */
-#define PN532_ERROR_DEP_BADDATA                                         (0x13)
-///< MIFARE: Authentication error
-#define PN532_ERROR_MIFARE_AUTH                                         (0x14)
-///< Target or Initiator does not support NFC Secur
-#define PN532_ERROR_NOSECURE                                            (0x18)
-///< I2C bus line is Busy. A TDA transaction is on going
-#define PN532_ERROR_I2CBUSY                                             (0x19)
-///< ISO/IEC14443-3: UID Check byte is wrong
-#define PN532_ERROR_UIDCHECKSUM                                         (0x23)
-/**
- * DEP Protocol: Invalid device state, the system is in a state which
- * does not allow the operation
- */
-#define PN532_ERROR_DEPSTATE                                            (0x25)
-///< Operation not allowed in this configuration (host controller interface)
-#define PN532_ERROR_HCIINVAL                                            (0x26)
-
-/**
- * This command is not acceptable due to the current context of the
- * PN533 (Initiator vs. Target, unknown target number, Target not in the
- * good state, ...)
- */
-#define PN532_ERROR_CONTEXT                                             (0x27)
-///< The PN533 configured as target has been released by its initiator
-#define PN532_ERROR_RELEASED                                            (0x29)
-/**
- * PN533 and ISO/IEC14443-3B only: the ID of the card does not match,
- * meaning that the expected card has been exchanged with another one.
- */
-#define PN532_ERROR_CARDSWAPPED                                         (0x2a)
-/**
- * PN533 and ISO/IEC14443-3B only: the card previously activated has
- * disappeared.
- */
-#define PN532_ERROR_NOCARD                                              (0x2b)
-/**
- * Mismatch between the NFCID3 initiator and the NFCID3 target in DEP
- * 212/424 kbps passive.
- */
-#define PN532_ERROR_MISMATCH                                            (0x2c)
-///< An over-current event has been detected
-#define PN532_ERROR_OVERCURRENT                                         (0x2d)
-///< NAD missing in DEP frame
-#define PN532_ERROR_NONAD                                               (0x2e)
-/* End: Official PN532 Errors Definitions */
-
 ///< Other Error Definitions
 #define PN532_STATUS_ERROR                                              (-1)
 #define PN532_STATUS_OK                                                 (0)
@@ -290,6 +183,107 @@ namespace pn532 {
         FeliCa_424kbps = 0x02,
         TypeB_106kbps = 0x03,
         Jewel_106kbps = 0x04,
+    };
+
+    enum PN532_ERROR_CODE {
+        ///< no error
+        PN532_ERROR_NONE = 0x00,
+        ///< Time Out, the target has not answered
+        PN532_ERROR_TIMEOUT = 0x01,
+        ///< A CRC error has been detected by the CIU
+        PN532_ERROR_CRC = 0x02,
+        ///< A Parity error has been detected by the CIU
+        PN532_ERROR_PARITY = 0x03,
+        /**
+         * During an anti-collision/select operation (ISO/IEC14443-3 Type A and
+         * ISO/IEC18092 106 kbps passive mode), an erroneous Bit Count has been
+         * detected
+         */
+        PN532_ERROR_COLLISION_BITCOUNT = 0x04,
+        ///< Framing error during MIFARE operation
+        PN532_ERROR_MIFARE_FRAMING = 0x05,
+        /**
+         * An abnormal bit-collision has been detected during bit wise
+         * anti-collision at 106 kbps
+         */
+        PN532_ERROR_COLLISION_BITCOLLISION = 0x06,
+        ///< Communication buffer size insufficien
+        PN532_ERROR_NOBUFS = 0x07,
+        ///< RF Buffer overflow has been detected by the CI
+        PN532_ERROR_RFNOBUFS = 0x09,
+        /**
+         * In active communication mode, the RF field has not been switched on
+         * in time by the counterpart (as defined in NFCIP-1 standard
+         */
+        PN532_ERROR_ACTIVE_TOOSLOW = 0x0a,
+        ///< RF Protocol error
+        PN532_ERROR_RFPROTO = 0x0b,
+        /**
+         * Temperature error: the internal temperature sensor has detected
+         * overheating, and therefore has automatically switched off the
+         * antenna drivers
+         */
+        PN532_ERROR_TOOHOT = 0x0d,
+        ///< Internal buffer overflow
+        PN532_ERROR_INTERNAL_NOBUFS = 0x0e,
+        ///< Invalid parameter (range, format...)
+        PN532_ERROR_INVAL = 0x10,
+        /**
+         * DEP Protocol: The PN533 configured in target mode does not support
+         * the command received from the initiator (the command received is not
+         * one of the following: ATR_REQ, WUP_REQ, PSL_REQ, DEP_REQ, DSL_REQ,
+         * RLS_REQ)
+         */
+        PN532_ERROR_DEP_INVALID_COMMAND = 0x12,
+        /**
+         * DEP Protocol, MIFARE or ISO/IEC14443-4: The data format does not
+         * match to the specification.  Depending on the RF protocol used, it
+         * can be: Bad length of RF received frame, Incorrect value of PCB or
+         * PFB, Invalid or unexpected RF received frame, NAD or DID incoherence.
+         */
+        PN532_ERROR_DEP_BADDATA = 0x13,
+        ///< MIFARE: Authentication error
+        PN532_ERROR_MIFARE_AUTH = 0x14,
+        ///< Target or Initiator does not support NFC Secure
+        PN532_ERROR_NOSECURE = 0x18,
+        ///< I2C bus line is Busy. A TDA transaction is on going
+        PN532_ERROR_I2CBUSY = 0x19,
+        ///< ISO/IEC14443-3: UID Check byte is wrong
+        PN532_ERROR_UIDCHECKSUM = 0x23,
+        /**
+         * DEP Protocol: Invalid device state, the system is in a state which
+         * does not allow the operation
+         */
+        PN532_ERROR_DEPSTATE = 0x25,
+        ///< Operation not allowed in this configuration (host controller interface)
+        PN532_ERROR_HCIINVAL = 0x26,
+        /**
+         * This command is not acceptable due to the current context of the
+         * PN533 (Initiator vs. Target, unknown target number, Target not in the
+         * good state, ...)
+         */
+        PN532_ERROR_CONTEXT = 0x27,
+        ///< The PN533 configured as target has been released by its initiator
+        PN532_ERROR_RELEASED = 0x29,
+        /**
+         * PN533 and ISO/IEC14443-3B only: the ID of the card does not match,
+         * meaning that the expected card has been exchanged with another one.
+         */
+        PN532_ERROR_CARDSWAPPED = 0x2a,
+        /**
+         * PN533 and ISO/IEC14443-3B only: the card previously activated has
+         * disappeared.
+         */
+        PN532_ERROR_NOCARD = 0x2b,
+        /**
+         * Mismatch between the NFCID3 initiator and the NFCID3 target in DEP
+         * 212/424 kbps passive.
+         */
+        PN532_ERROR_MISMATCH = 0x2c,
+        ///< An over-current event has been detected
+        PN532_ERROR_OVERCURRENT = 0x2d,
+        ///< NAD missing in DEP frame
+        PN532_ERROR_NONAD = 0x2e,
     };
 
 
@@ -343,7 +337,6 @@ namespace pn532 {
     /**
      * PN532 解包 回复信息
      * @param cmd out 回复命令，一般是发送命令+1
-     * @param error out 错误 0x00：成功，其他：参考 PN532_ERROR_XXX
      * @param out out 回复信息指针
      * @param len_out out 回复信息长度
      * @param data in 原始数据
@@ -354,19 +347,18 @@ namespace pn532 {
      *      成功不带数据：00 00 FF 00 FF 00 00 00 FF 03 FD D5 41 00 EA 00
      *      失败：00 00 FF 00 FF 00 00 00 FF 03 FD D5 41 27 C3 00
      */
-    int PN532_GetResponse(uint8_t *cmd, uint8_t *error, uint8_t *out, uint16_t *len_out, uint8_t *data, uint16_t len);
+    int PN532_GetResponse(uint8_t *cmd, uint8_t *out, uint16_t *len_out, uint8_t *data, uint16_t len);
 
     /**
      * PN532 组包 回复信息
      * @param out out 输出数据
      * @param len_out out 输出数据长度
      * @param cmd 回复的命令，一般
-     * @param error 0x00：成功 其他：参考 PN532_ERROR_XXX
      * @param data 回复信息中数据
      * @param len 回复信息中数据长度
      * @return 回复信息长度
      */
-    int Pn532_SetResponse(uint8_t *out, uint16_t *len_out, uint8_t cmd, uint8_t error, uint8_t *data, uint16_t len);
+    int Pn532_SetResponse(uint8_t *out, uint16_t *len_out, uint8_t cmd, uint8_t *data, uint16_t len);
 
     //fun
 
@@ -403,6 +395,19 @@ namespace pn532 {
      * @return PN532_STATUS_ERROR：失败 PN532_STATUS_OK：成功
      */
     int PN532_SetInfo_ReadPassiveTarget(uint8_t *out, uint16_t *len, uint8_t card_baud);
+
+
+    /**
+   * 解包，获取数据交换时的结果，对应命令为0x41
+   * @param error out 验证结果，参考 PN532_ERROR_CODE
+   * @param data_get out 回复的数据，可以为null
+   * @param len_get out 回复的数据长度
+   * @param data in 数据包
+   * @param len in 数据包长度
+   * @return
+   */
+    int PN532_GetInfo_Response_InDataExchange(uint8_t *error, uint8_t *data_get, uint16_t *len_get,
+                                              uint8_t *data, uint16_t len);
 
     /**
      * 组包，认证M1卡的指定块
@@ -516,6 +521,7 @@ namespace pn532 {
      * @return
      */
     int PN532_GetInfo_GetCID(vector<PassiveTarget_ISOIEC1443TypeA> &vector_passiveTarget, uint8_t *data, uint16_t len);
+
 }
 
 

@@ -342,7 +342,8 @@ void MainWindow::on_sendPushButton1_clicked() {
         }
         //更新发送计数，串口发送，将发送的数据显示出来
         sendNum += send_len;
-        seriport->writeSerialPort(send_buf, send_len);
+        int ret = 0;
+        ret = seriport->writeSerialPort(send_buf, send_len);
         ui->recvTextEdit->insertPlainText("send:");
         for (int i = 0; i < send_len; i++) {
             char hex_str[4];

@@ -117,7 +117,7 @@ namespace pn532 {
         return PN532_STATUS_OK;
     }
 
-    int PN532_GetResponse(uint8_t *cmd, uint8_t *error, uint8_t *out, uint16_t *len_out, uint8_t *data, uint16_t len) {
+    int PN532_GetResponse(uint8_t *cmd, uint8_t *out, uint16_t *len_out, uint8_t *data, uint16_t len) {
 
         int index_start = 0;
 
@@ -157,16 +157,19 @@ namespace pn532 {
         uint16_t response_data_len = 0;
         bzero(response_data, sizeof(response_data));
         PN532_ReadFrame(response_data, &response_data_len, response_frame, response_frame_len);
-        //get uint response_data[0] = D5
+        //pn532tohost response_data[0] = D5
         *cmd = response_data[1];
-        *error = response_data[2];
-        memcpy(out, &response_data[3], (response_data_len - 3));
-        *len_out = (response_data_len - 3);
+        if (response_data_len > 2 && out != nullptr) {
+            memcpy(out, &response_data[2], (response_data_len - 2));
+            *len_out = (response_data_len - 2);
+        } else {
+            *len_out = 0;
+        }
 
-        return *error;
+        return PN532_STATUS_OK;
     }
 
-    int Pn532_SetResponse(uint8_t *out, uint16_t *len_out, uint8_t cmd, uint8_t error, uint8_t *data, uint16_t len) {
+    int Pn532_SetResponse(uint8_t *out, uint16_t *len_out, uint8_t cmd, uint8_t *data, uint16_t len) {
         uint8_t frame[255] = {0};
         uint16_t frame_index = 0;
         bzero(frame, sizeof(frame));
@@ -179,8 +182,7 @@ namespace pn532 {
         //D5
         data_in[0] = PN532_PN532TOHOST;
         data_in[1] = cmd;
-        data_in[2] = error;
-        data_in_len += 3;
+        data_in_len += 2;
         if (len > 0) {
             memcpy(&data_in[data_in_len], data, len);
             data_in_len += len;
@@ -276,6 +278,21 @@ namespace pn532 {
         return ret;
     }
 
+    int PN532_GetInfo_Response_InDataExchange(uint8_t *error, uint8_t *data_get, uint16_t *len_get, uint8_t *data,
+                                              uint16_t len) {
+        int ret = 0;
+
+        *error = data[0];
+
+        if (data_get != nullptr && len > 1) {
+            memcpy(data_get, &data[1], len - 1);
+            *len_get = len - 1;
+        }
+
+        ret = PN532_STATUS_OK;
+        return ret;
+    }
+
     int PN532_SetInfo_MifareClassicAuthenticateBlock(uint8_t *out, uint16_t *len, uint8_t *uid, uint16_t uid_length,
                                                      uint16_t block_number, uint16_t key_type, uint8_t *key) {
         int ret = 0;
@@ -310,6 +327,7 @@ namespace pn532 {
         ret = PN532_WriteFrame(out, len, frame, frame_index);
         return ret;
     }
+
 
     int PN532_SetInfo_MifareClassicReadBlock(uint8_t *out, uint16_t *len, uint16_t block_number) {
         int ret = 0;
