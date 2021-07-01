@@ -15,10 +15,13 @@ set(QT_VERSION 5)
 set(REQUIRED_LIBS Core Gui Widgets)
 set(REQUIRED_LIBS_QUALIFIED Qt5::Core Qt5::Gui Qt5::Widgets)
 
-set(SRC_FILES   res.qrc
-                mainwindow.cpp
-                serialport.cpp
-                thread.cpp )
+include_directories(${PROJECT_SOURCE_DIR})
+
+set(SRC_FILES res.qrc
+        mainwindow.cpp
+        serialport.cpp
+        thread.cpp
+        pn532.cpp)
 
 
 add_executable(${PROJECT_NAME} main.cpp ${SRC_FILES})
@@ -30,3 +33,5 @@ endif ()
 
 find_package(Qt${QT_VERSION} COMPONENTS ${REQUIRED_LIBS} REQUIRED)
 target_link_libraries(${PROJECT_NAME} ${REQUIRED_LIBS_QUALIFIED})
+
+add_subdirectory(test)
